@@ -6,6 +6,7 @@ from scipy.io import wavfile
 samp_rate = 48000	# audio file sample rate
 tone = 500 	# frequency of the CW tone in Hz
 vol = 0.3 	# volume = max amplitude of the audio tone
+fadein = 1/16
 
 # these definitions have been copied from:
 # 	A Standard for Morse Timing Using the Farnsworth Technique
@@ -24,8 +25,8 @@ dah = vol*np.sin(2*np.pi*tone/samp_rate*np.arange(3*u*samp_rate))
 space = np.zeros(int(u*samp_rate))
 
 # generate windowing functions for dits and dahs to mitigate 'key-clicking'
-cos_rise = 0.5 - 0.5*np.cos(np.linspace(0,np.pi,int(0.125*u*samp_rate)))
-cos_fall = 0.5 - 0.5*np.cos(np.linspace(np.pi,2*np.pi,int(0.125*u*samp_rate)))
+cos_rise = 0.5 - 0.5*np.cos(np.linspace(0,np.pi,int(fadein*u*samp_rate)))
+cos_fall = 0.5 - 0.5*np.cos(np.linspace(np.pi,2*np.pi,int(fadein*u*samp_rate)))
 ditwin = np.concatenate((cos_rise,np.ones(dit.size-cos_rise.size-cos_fall.size),cos_fall))
 dahwin = np.concatenate((cos_rise,np.ones(dah.size-cos_rise.size-cos_fall.size),cos_fall))
 
